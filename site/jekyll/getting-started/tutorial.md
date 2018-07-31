@@ -43,7 +43,7 @@ Start by creating a new ASP.NET Core MVC project:
 4. In the "New ASP.NET Core Web Application" dialog, select the "Web Application (Model-View-Controller)" template. Also, click "Change Authentication" and select "No Authentication" if it isn't already selected by default.
    [<img src="/img/tutorial/new_webapp_600.png" alt="Screenshot: New ASP.NET Core MVC Project dialog" width="600" />](/img/tutorial/new_webapp.png)
    
-Note: This is important! Do **not** select the React.js template as it would create a pure React.js App without ReactJS.NET wrapper.
+> Note: This is important! Do **not** select the React.js template as it would create a pure React.js App without ReactJS.NET wrapper.
 
 ### Remove example content
 
