@@ -6,7 +6,7 @@ layout: docs
 
 > Note:
 >
-> This tutorial is for Visual Studio 2015 and ASP.NET Core MVC. If you're still using ASP.NET 4 and ASP.NET MVC 5, you can [follow the ASP.NET 4 tutorial instead](/getting-started/tutorial_aspnet4.html)
+> This tutorial is for Visual Studio 2017 and ASP.NET Core MVC. If you're still using ASP.NET 4 and ASP.NET MVC 5, you can [follow the ASP.NET 4 tutorial instead](/getting-started/tutorial_aspnet4.html)
 
 This tutorial covers the end-to-end process of creating a brand new ASP.NET MVC website and adding a React component in it. We will start from scratch and end with a fully functioning component. It assumes you have basic knowledge of ASP.NET MVC and using Visual Studio. This tutorial is based off the [original React tutorial](https://reactjs.org/tutorial/tutorial.html) but has been modified specifically for ReactJS.NET.
 
@@ -30,20 +30,20 @@ It'll also have a few neat features:
 
 ## Getting started
 
-For this tutorial we'll be using Visual Studio 2015. If you do not already have a copy of Visual Studio, [the Community version](https://www.visualstudio.com/vs/community/) is free. We will be using ASP.NET Core MVC.
+For this tutorial we'll be using Visual Studio 2017. If you do not already have a copy of Visual Studio, [the Community version](https://www.visualstudio.com/vs/community/) is free. We will be using ASP.NET Core MVC.
 
 ### New Project
 
 Start by creating a new ASP.NET Core MVC project:
 
 1. File → New → Project
-2. Ensure ".NET Framework 4.6" is selected in the dropdown list at the top
-3. Go to Templates → Visual C# → Web and select the "ASP.NET Core Web Application (.NET Framework)" template. Call it "ReactDemo"
+2. Go to Visual C# → Web and select the "ASP.NET Core Web Application" template. Call it "ReactDemo"
    [<img src="/img/tutorial/newproject_core_600.png" alt="Screenshot: New Project" width="600" />](/img/tutorial/newproject_core.png)
-3. In the "New ASP.NET Core Web Application" dialog, select the Web Application template. Also, click "Change Authentication" and select "No Authentication"
+3. Make sure ".NET Core" and "ASP.NET Core 2.1" are selected at the top.
+4. In the "New ASP.NET Core Web Application" dialog, select the "Web Application (Model-View-Controller)" template. Also, click "Change Authentication" and select "No Authentication" if it isn't already selected by default.
    [<img src="/img/tutorial/new_webapp_600.png" alt="Screenshot: New ASP.NET Core MVC Project dialog" width="600" />](/img/tutorial/new_webapp.png)
-
-Note: We are using .NET Framework in this tutorial, but you can instead use .NET Core if you want to be able to run your site on Linux or Mac OS. Currently .NET Core is missing some of the functionality provided by .NET Framework, so it is recommended to use .NET Framework unless you have a reason to use .NET Core specifically (eg. cross-platform support).
+   
+Note: This is important! Do **not** select the React.js template as it would create a pure React.js App without ReactJS.NET wrapper.
 
 ### Remove example content
 
@@ -51,8 +51,6 @@ The default Web Application template includes some example content that we don't
 
  - `Controllers\HomeController.cs`
  - `Views\Home` and `Views\Shared` folders
- - `bundleconfig.json`
- - `Project_Readme.html`
 
 ### Install ReactJS.NET
 
@@ -69,6 +67,18 @@ using Microsoft.AspNetCore.Http;
 using React.AspNet;
 ```
 
+Change the type:
+
+```csharp
+void ConfigureServices(IServiceCollection services)
+```
+
+To:
+
+```csharp
+IServiceProvider ConfigureServices(IServiceCollection services)
+```
+
 Directly above:
 
 ```csharp
@@ -83,7 +93,38 @@ services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 services.AddReact();
 ```
 
-Directly **above**:
+Directly below:
+
+```csharp
+// Add framework services.
+services.AddMvc();
+```
+
+Add:
+
+```csharp
+return services.BuildServiceProvider();
+```
+
+So in the end it resembles this:
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+	services.Configure<CookiePolicyOptions>(options => {
+    	// This lambda determines whether user consent for non-essential cookies is needed for a given request.
+    	options.CheckConsentNeeded = context => true;
+        options.MinimumSameSitePolicy = SameSiteMode.None;
+	});
+
+   	services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+    services.AddReact();
+    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+    return services.BuildServiceProvider();
+}
+```
+
+Directly above:
 
 ```csharp
 app.UseStaticFiles();
@@ -145,16 +186,16 @@ Replace the contents of the new view file with the following:
 </head>
 <body>
 	<div id="content"></div>
-	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
-	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
-<script src="@Url.Content("~/Scripts/Tutorial.jsx")"></script>
+	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
+	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="@Url.Content("~/js/Tutorial.jsx")"></script>
 </body>
 </html>
 ```
 
 *Note: In a real ASP.NET MVC site, you'd use a layout. However, to keep this tutorial simple, we will keep all HTML in the one view file.*
 
-We also need to create the referenced JavaScript file (`tutorial.jsx`). Right-click on `wwwroot\js` and select Add → New Item. Select .NET Core → Client-side → JavaScript File, enter "tutorial.jsx" as the file name, and click "Add".
+We also need to create the referenced JavaScript file (`Tutorial.jsx`). Right-click on `wwwroot\js` and select Add → New Item. Select .NET Core → Client-side → JavaScript File, enter "Tutorial.jsx" as the file name, and click "Add".
 
 For the remainder of this tutorial, we'll be writing our JavaScript code in this file.
 
