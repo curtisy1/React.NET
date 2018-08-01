@@ -188,6 +188,7 @@ Replace the contents of the new view file with the following:
 	<div id="content"></div>
 	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
 	<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
 	<script src="@Url.Content("~/js/Tutorial.jsx")"></script>
 </body>
 </html>
